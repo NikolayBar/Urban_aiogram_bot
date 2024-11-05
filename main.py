@@ -4,8 +4,6 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 import asyncio
 
-from pyexpat.errors import messages
-
 
 class UserState(StatesGroup):
     age = State()
