@@ -6,12 +6,16 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher import FSMContext
 import asyncio
 
+from crud_functions import *
+
 
 class UserState(StatesGroup):
     age = State()
     growth = State()
     weight = State()
 
+
+product_tab = get_all_products()
 
 with open('UrbanStudentBot.token', 'r', encoding='utf-8') as f:
     api = f.read().strip()
@@ -91,9 +95,11 @@ async def start(message):
 @dp.message_handler(text='Купить')
 async def get_buying_list(message):
     images = ['pic_1.jpg', 'pic_2.jpg', 'pic_3.jpg', 'pic_4.jpg']
-    for i in range(4):
+    rows = len(product_tab)
+    for i in range(rows):
+        prods = product_tab[i]
         with open(images[i], 'rb') as img:
-            txt_msg = f'Название: Product{i + 1} | Описание: описание {i + 1} | Цена: {(i + 1) * 100}'
+            txt_msg = f'Название: {prods[1]} | Описание: {prods[2]} | Цена: {prods[3]}'
             await message.answer_photo(img, txt_msg)
     await message.answer('Выберите продукт для покупки:', reply_markup=i_menu)
 
