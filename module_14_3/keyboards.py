@@ -4,7 +4,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 button_1 = KeyboardButton(text='Рассчитать')
 button_2 = KeyboardButton(text='Информация')
 button_3 = KeyboardButton(text='Купить')
-kb = ReplyKeyboardMarkup(keyboard=[[button_1, button_2], [button_3]], resize_keyboard=True)
+button_4 = KeyboardButton(text='Регистрация')
+kb = ReplyKeyboardMarkup(keyboard=[[button_1, button_2], [button_3], [button_4]], resize_keyboard=True)
 
 i_button_1 = InlineKeyboardButton(text='Рассчитать норму калорий', callback_data='calories')
 i_button_2 = InlineKeyboardButton(text='Формулы расчёта', callback_data='formulas')

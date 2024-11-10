@@ -12,6 +12,12 @@ class UserState(StatesGroup):
     growth = State()
     weight = State()
 
+class RegistrationState(StatesGroup):
+    username = State()
+    email = State()
+    age = State()
+    balance = State
+
 
 product_tab = get_all_products()
 

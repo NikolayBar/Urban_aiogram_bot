@@ -23,6 +23,7 @@ def initiate_db():
     connection.commit()
     connection.close()
 
+
 def get_all_products():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
@@ -31,14 +32,22 @@ def get_all_products():
     connection.close()
     return all_products
 
+
 def is_included(value):
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
     cursor.execute(f"SELECT * FROM Users WHERE username = ?", (value,))
-    return cursor.fetchone()
+    result = cursor.fetchone()
+    connection.close()
+    return True if result else False
+
 
 def add_user(username, email, ade):
-    pass
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO Users(username, email, age, balance) VALUES(?,?,?,?);", (username, email, ade, 1000))
+    connection.commit()
+    connection.close()
 
 if __name__ == '__main__':
     initiate_db()
@@ -61,11 +70,10 @@ if __name__ == '__main__':
     # VALUES('Ivan', 'ivan@mail.ru', 28, 1000);
     # """)
     # connection.commit()
-    # connection.close()
+    connection.close()
 
-    res = is_included('Ivan')
-    print(is_included.__dict__)
-    if res:
-        print(res)
+    name = 'Федя'
+    if not is_included(name):
+        add_user(name, f'{name.lower()}@mail.ru', 28)
     else:
-        print('Not found')
+        print('УЖЕ ЕСТЬ')
