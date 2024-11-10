@@ -1,4 +1,6 @@
 import sqlite3
+
+
 def initiate_db():
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
@@ -26,14 +28,22 @@ def get_all_products():
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM Products")
     all_products = cursor.fetchall()
-    # connection.commit()
     connection.close()
     return all_products
 
+def is_included(value):
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM Users WHERE username = ?", (value,))
+    return cursor.fetchone()
+
+def add_user(username, email, ade):
+    pass
+
 if __name__ == '__main__':
     initiate_db()
-    # connection = sqlite3.connect('database.db')
-    # cursor = connection.cursor()
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
     # cursor.execute("DELETE FROM Products")
     # cursor.execute(f"""INSERT INTO Products (title, description, price)
     # VALUES
@@ -45,3 +55,17 @@ if __name__ == '__main__':
     #
     # connection.commit()
     # connection.close()
+
+    # cursor.execute("""
+    # INSERT INTO Users(username, email, age, balance)
+    # VALUES('Ivan', 'ivan@mail.ru', 28, 1000);
+    # """)
+    # connection.commit()
+    # connection.close()
+
+    res = is_included('Ivan')
+    print(is_included.__dict__)
+    if res:
+        print(res)
+    else:
+        print('Not found')
