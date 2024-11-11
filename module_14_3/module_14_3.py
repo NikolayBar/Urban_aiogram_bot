@@ -7,16 +7,18 @@ import asyncio
 from crud_functions import *
 from keyboards import *
 
+
 class UserState(StatesGroup):
     age = State()
     growth = State()
     weight = State()
 
+
 class RegistrationState(StatesGroup):
     username = State()
     email = State()
     age = State()
-    balance = State
+    balance = State()
 
 
 product_tab = get_all_products()
@@ -26,6 +28,40 @@ with open('UrbanStudentBot.token', 'r', encoding='utf-8') as f:
 
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
+
+
+@dp.message_handler(text='Регистрация')
+async def sing_up(message):
+    await message.answer('Введите имя пользователя (только латинский алфавит):')
+    await RegistrationState.username.set()
+
+
+@dp.message_handler(state=RegistrationState.username)
+async def set_username(message, state):
+    if not is_included(message.text):
+        await state.update_data(username=message.text)
+        await message.answer('Введите свой email:')
+        await RegistrationState.email.set()
+    else:
+        await message.answer('Пользователь существует, введите другое имя')
+        await RegistrationState.username.set()
+
+
+@dp.message_handler(state=RegistrationState.email)
+async def set_email(message, state):
+    await state.update_data(email=message.text)
+    await message.answer('Введите свой возраст:')
+    await RegistrationState.age.set()
+
+
+@dp.message_handler(state=RegistrationState.age)
+async def set_age(message, state):
+    await state.update_data(age=message.text)
+    data = await state.get_data()
+    u_name, u_email, u_age = data['username'], data['email'], data['age']
+    add_user(u_name, u_email, u_age)
+    await message.answer(f'Регистрация прошла успешно.', reply_markup=kb)
+    await state.finish()
 
 
 @dp.message_handler(text='Рассчитать')
@@ -67,6 +103,8 @@ async def send_calories(message, state):
     a, g, w = data['age'], data['growth'], data['weight']
     res = eval(f'(10 * {w}) + (6.25 * {g}) - (5 * {a}) + 5')
     await message.answer(f'Ваша норма калорий {res} в сутки')
+
+    await message.answer('/start')
     await state.finish()
 
 
